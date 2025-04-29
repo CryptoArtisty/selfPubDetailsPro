@@ -1,15 +1,19 @@
 // popup.js
 document.getElementById('toggle').addEventListener('click', () => {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    if (!tabs[0] || !tabs[0].id) return;
+    if (!tabs[0] || !tabs[0].id) {
+      console.error('No active tab found');
+      return;
+    }
+    console.log('Sending SCRAPE_PAGE to tab:', tabs[0].id);
     chrome.tabs.sendMessage(
       tabs[0].id,
       { type: 'SCRAPE_PAGE' },
       response => {
         if (chrome.runtime.lastError) {
-          console.warn('Content script not found on this page:', chrome.runtime.lastError.message);
+          console.warn('Content script error:', chrome.runtime.lastError.message);
         } else {
-          console.log('SCRAPE_PAGE message sent successfully:', response);
+          console.log('Scrape response:', response);
         }
       }
     );
@@ -17,13 +21,14 @@ document.getElementById('toggle').addEventListener('click', () => {
 });
 
 document.getElementById('export').addEventListener('click', () => {
+  console.log('Sending EXPORT_CSV message');
   chrome.runtime.sendMessage(
     { type: 'EXPORT_CSV' },
     response => {
       if (chrome.runtime.lastError) {
-        console.warn('Export failed:', chrome.runtime.lastError.message);
+        console.error('Export error:', chrome.runtime.lastError.message);
       } else {
-        console.log('EXPORT_CSV message sent successfully.');
+        console.log('Export response:', response);
       }
     }
   );

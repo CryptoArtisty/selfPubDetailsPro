@@ -21,7 +21,7 @@
   "options_page": "options.html",
   "content_scripts": [
     {
-      "matches": ["*://*.amazon.com/s?k=*", "*://*.amazon.com/dp/*"],
+      "matches": ["*://*.amazon.com/dp/*", "*://*.amazon.com/gp/product/*"],
       "js": ["rateLimiter.js", "content.js"],
       "run_at": "document_idle"
     }
